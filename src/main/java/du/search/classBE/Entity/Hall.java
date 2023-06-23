@@ -1,6 +1,7 @@
 package du.search.classBE.Entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -21,4 +22,10 @@ public class Hall {
     @JoinColumn(name = "buildingId")
     private Building building;
 
+    @Builder
+    public Hall(Long id, String hallNumber, Building building) {
+        this.id = id;
+        this.hallNumber = hallNumber;
+        this.building = building;
+    }
 }
