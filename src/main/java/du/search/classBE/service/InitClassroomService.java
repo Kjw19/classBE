@@ -3,8 +3,10 @@ package du.search.classBE.service;
 import du.search.classBE.Entity.Building;
 import du.search.classBE.Entity.Classroom;
 import du.search.classBE.Entity.Hall;
+import du.search.classBE.Entity.HallLocationData;
 import du.search.classBE.Repository.BuildingRepository;
 import du.search.classBE.Repository.ClassroomRepository;
+import du.search.classBE.Repository.HallLocationDataRepository;
 import du.search.classBE.Repository.HallRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,10 @@ public class InitClassroomService {
     private final BuildingRepository buildingRepository;
     private final ClassroomRepository classroomRepository;
     private final HallRepository hallRepository;
+
+    private final HallLocationDataRepository hallLocationDataRepository;
+
+    private static final String HALL_NOT_EXIST = "0";
 
 
     @Transactional
@@ -45,29 +51,25 @@ public class InitClassroomService {
             String floorAndRoom = parts[1];
 
             Building DbBuildingName = createBuildingName(buildingName);
-            Hall hall = createHall(buildingName, "0", DbBuildingName);
+            Hall hall = createHall(buildingName, HALL_NOT_EXIST, DbBuildingName);
             createClassroom(floorAndRoom, hall);
         }
 
     }
 
+    @Transactional
+    public void insertHallLocation(List<HallLocationData> hallLocationDataList) {
+        for (HallLocationData hallLocationData : hallLocationDataList) {
+            hallLocationDataRepository.save(hallLocationData);
+        }
+    }
+
     private Building createBuildingName(String buildingName) {
-        if (buildingRepository == null) {
-            throw new IllegalStateException("buildingRepository is null");
-        }
-
-        if (buildingName == null) {
-            throw new IllegalStateException("buildingName is null");
-        }
-
         Building DbBuildingName = buildingRepository.findByName(buildingName);
         if (DbBuildingName == null) {
             DbBuildingName = Building.builder()
                     .name(buildingName)
                     .build();
-            if (DbBuildingName == null) {
-                throw new IllegalStateException("DbBuildingName is null");
-            }
 
             buildingRepository.save(DbBuildingName);
         }

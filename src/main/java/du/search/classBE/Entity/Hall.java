@@ -18,14 +18,19 @@ public class Hall {
 
     private String hallNumber;
 
+    private double latitude;
+    private double longitude;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buildingId")
     private Building building;
 
     @Builder
-    public Hall(Long id, String hallNumber, Building building) {
+    public Hall(Long id, String hallNumber, double latitude, double longitude, Building building) {
         this.id = id;
         this.hallNumber = hallNumber;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.building = building;
     }
 }
